@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Void Serpents >  {{page_name}}</title>
+    <meta
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+      name="viewport"
+    />
+
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='assets/img/kaiadmin/favicon.ico') }}"
+      type="{{ url_for('static', filename='image/x-icon') }}"
+    />
+
+    <!-- Fonts and icons -->
+    <script src="{{ url_for('static', filename='assets/js/plugin/webfont/webfont.min.js') }}"></script>
+    <script>
+      WebFont.load({
+        google: { families: ["Public Sans:300,400,500,600,700"] },
+        custom: {
+          families: [
+            "Font Awesome 5 Solid",
+            "Font Awesome 5 Regular",
+            "Font Awesome 5 Brands",
+            "simple-line-icons",
+          ],
+          urls: ["{{ url_for('static', filename='assets/css/fonts.min.css') }}"],
+        },
+        active: function () {
+          sessionStorage.fonts = true;
+        },
+      });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/plugins.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/kaiadmin.min.css') }}" />
+
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/demo.css') }}" />
+  </head>
+
+  <div class="container" >
+    <div class="page-inner">    
+<div class="row">
+    <div class="col-md-4" Style="  position: absolute; top:20% ; left:35%">
+        <form method="POST" action="{{ url_for('login_page') }}">
+
+            <div class="card">
+                <div class="card-header">
+                <div class="card-title">Login</div>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                                                    <!-- Flash Messages -->
+              
+                        <label for="email2">Username</label>                     
+                        <input
+                        type="name"
+                        class="form-control"
+                        name="agens"
+                        placeholder="Enter username or email"
+                        />
+                        {% with messages = get_flashed_messages()%}
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="form-group has-error has-feedback">
+                                    <label for="errorInput">{{message}}</label>
+                                </div>
+                            {% endfor %} 
+                     {%else%}
+                        <small id="emailHelp2" class="form-text text-muted"
+                        >enter your username or email</small
+                        >
+                        {% endif %}
+                        {% endwith %}  
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input
+                        type="password"
+                        class="form-control"
+                        name="password"
+                        placeholder="Password"
+                        />
+                    </div>
+                </div>
+                <div class="card-action">
+                    <button class="btn btn-success"  type="submit" value="Submit">login</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <a href="{{ url_for('chat_bp.router') }}" class="btn btn-success">Go to Router</a>
+
+</div>
+    
+
+    </div>
+
+</div>
+</div>
+
+
