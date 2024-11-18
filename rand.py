@@ -1,30 +1,45 @@
-from flask import Flask, render_template, request, jsonify
+import Adafruit_SSD1306
+from PIL import Image, ImageDraw, ImageFont
+import socket
+import time
 
-app = Flask(__name__)
+# Set up the OLED display
+disp = Adafruit_SSD1306.SSD1306_128_32(rst=None)
+disp.begin()
+disp.clear()
+disp.display()
 
-# Store chat messages in memory (use a database in production)
-messages = []
+# Create a blank image for drawing.
+width = disp.width
+height = disp.height
+image = Image.new("1", (width, height))
+draw = ImageDraw.Draw(image)
 
-@app.route('/')
-def index():
-    return render_template('chat.html')
+# Load a font
+font = ImageFont.load_default()
 
-@app.route('/send_message', methods=['POST'])
-def send_message():
-    # Extract data from the form
-    username = request.remote_addr
+def get_ip_address():
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+        s.close()
+    except Exception:
+        ip = "No IP"
+    return ip
 
-    message = request.form.get('message')
-    
-    if username and message:
-        messages.append({'username': username, 'message': message})
-    
-    return '', 204  # Return empty response with "No Content"
+while True:
+    # Clear the display
+    draw.rectangle((0, 0, width, height), outline=0, fill=0)
 
-@app.route('/get_messages', methods=['GET'])
-def get_messages():
-    # Return the list of messages as JSON
-    return jsonify(messages)
+    # Get IP address
+    ip_address = get_ip_address()
+    draw.text((0, 0), "IP Address:", font=font, fill=255)
+    draw.text((0, 15), ip_address, font=font, fill=255)
 
-if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    # Display image
+    disp.image(image)
+    disp.display()
+
+    # Wait a bit before updating
+    time.sleep(10)

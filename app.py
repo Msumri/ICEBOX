@@ -10,6 +10,9 @@ import time
 import hashcheck
 import requests
 
+
+
+
 # Function to read data from JSON file
 def read_json_file(filename):
     with open(filename) as f:
@@ -29,6 +32,38 @@ safecontrolcode="117200320"
 #641B44E5FE100E9F11685E13009928E2BA52544B4E7D7E495AF8000A0A148DC9
 #641B44E5FE100E9F11685E13009928E2BA52544B4E7D7E495AF8000A0A148DC9
 #E2EAFA6A936505D1706D676854A101B04A2FBD84CE52EC840D5E6F13473D0A68
+
+######################-----------OLED-----############################
+import Adafruit_SSD1306
+from PIL import Image, ImageDraw, ImageFont
+import time
+# Set up the OLED display
+disp = Adafruit_SSD1306.SSD1306_128_32(rst=None)
+disp.begin()
+disp.clear()
+disp.display()
+
+def oled(filepath):
+    """Displays a PNG image on the OLED display."""
+    # Load the image and convert it to 1-bit color
+    image_path = os.path.join(app.root_path, 'static',filepath)
+    image = Image.open(image_path).convert('1')
+
+    # Resize the image if it’s not already 128x32
+    image = image.resize((disp.width, disp.height), Image.Resampling.LANCZOS)
+
+
+    # Display the image on the OLED
+    disp.image(image)
+    disp.display()
+
+
+
+
+oled("locked.png")
+
+######################-----------end of OLED-----############################
+
 
 
 # List of blocked IPs
@@ -202,7 +237,6 @@ def progressreport():
         return redirect(url_for('upload_bp.upload_form'))
 
 
-import RPi.GPIO as GPIO
 import pigpio
 import time
 
@@ -222,10 +256,12 @@ def safecontrol():
         if toggle_state == 'on':
             # Do something for 'on' state (e.g., activate a device)
             pwm.set_servo_pulsewidth( servo, 1500 ) 
-
+            oled("locked.png")
         elif toggle_state == 'off':
             # Do something for 'off' state (e.g., deactivate a device)
             pwm.set_servo_pulsewidth( servo, 2500 )
+            oled("open.png")
+
         return "yaay"
     else:    
         attempts=0
@@ -270,4 +306,4 @@ def safecontrol_post():
 def forbidden(e):
     return "Access Denied: Your IP is blocked!", 403
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=80)
